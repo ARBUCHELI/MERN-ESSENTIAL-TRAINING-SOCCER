@@ -37,4 +37,14 @@ export const addNewPlayer = (req, res) => {
         })
 }
 
+export const getPlayers = (req, res) => {
+        Player.find({})
+        .then(function (Player) {
+            res.json(Player);
+        })
+        .catch(function (err) {
+            console.log(err);
+        })
+}
+
 
