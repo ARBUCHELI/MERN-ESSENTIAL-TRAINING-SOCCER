@@ -1,4 +1,8 @@
-import { addNewPlayer, getPlayers } from "../controllers/playerControllers";
+import {
+    addNewPlayer, 
+    getPlayers,
+    getPlayerWithID
+} from "../controllers/playerControllers";
 
 /**
  * We need to create a variable that will hold the routes, and then pass the app as an argument.  So we'll need to insert this route
@@ -7,9 +11,13 @@ import { addNewPlayer, getPlayers } from "../controllers/playerControllers";
 
 const routes = (app) => {
     app.route('/players')
-    .get(getPlayers)
-    // POST endpoint
+        // GET endpoint
+        .get(getPlayers)
+        // POST endpoint
         .post(addNewPlayer);
+    
+    app.route('/player/:PlayerId')
+        .get(getPlayerWithID)
 }
 
 export default routes;

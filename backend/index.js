@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyparser from 'body-parser';
+import cors from 'cors';
 import routes from './routes/soccerRoutes';
 
 const app = express();
@@ -16,6 +17,9 @@ mongoose.connect('mongodb://localhost/soccerDB', {
 // bodyparser setup
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
+
+// CORS setup
+app.use(cors());
 
 /**
  * With doing this, we are basically saying that we have these routes available

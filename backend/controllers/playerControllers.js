@@ -47,4 +47,17 @@ export const getPlayers = (req, res) => {
         })
 }
 
+export const getPlayerWithID = async (req, res) => {
+    try {
+      const player = await Player.findById(req.params.PlayerId).exec();
+      res.json(player);
+    } catch (err) {
+      res.status(500).send(err);
+      console.log(err);
+    }
+  };
+  
+
+
+
 
