@@ -14,49 +14,69 @@ const Player = mongoose.model('Player', PlayerSchema)
 */
 
 export const addNewPlayer = (req, res) => {
-    /** First we create a temporary variable called newPlayer, and we'll insert a Player object the we created in line 5.  And
-     *  we'll insert inside of that new variable, the body of our request.  So whatever data we are going to send from the request
-     * is going to be inserted inside of that particular variable.
-     * Then the newPlacer will be saved in the database.
-    */
-    let newPlayer = new Player(req.body);
+    const newPlayer = new Player(req.body);
+    newPlayer
+      .save()
+      .then((savedPlayer) => {
+        res.json(savedPlayer);
+      })
+      .catch((err) => {
+        console.error('An error occurred while saving the new player:', err);
+        res.status(500).json({ error: 'An error occurred while saving the new player.' });
+      });
+  };
 
-    /*newPlayer.save((err, Player) => {
-        if (err) {
-            res.send(err);
-        }
-        res.json(Player);
-    })*/
 
-    newPlayer.save()
-        .then(function (Player) {
-            res.json(Player);
-        })
-        .catch(function (err) {
-            console.log(err);
-        })
-}
-
-export const getPlayers = (req, res) => {
-        Player.find({})
-        .then(function (Player) {
-            res.json(Player);
-        })
-        .catch(function (err) {
-            console.log(err);
-        })
-}
+export const getPlayers = async (req, res) => {
+  try {
+    const players = await Player.find({});
+    res.json(players);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
 
 export const getPlayerWithID = async (req, res) => {
-    try {
-      const player = await Player.findById(req.params.PlayerId).exec();
-      res.json(player);
-    } catch (err) {
-      res.status(500).send(err);
-      console.log(err);
-    }
-  };
+  try {
+    const player = await Player.findById(req.params.PlayerId).exec();
+    res.json(player);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
   
+export const UpdatePlayer = (req, res) => {
+    Player.findOneAndUpdate({ _id: req.params.PlayerId }, req.body, { new: true })
+        .then((player) => {
+            res.json(player);
+        })
+        .catch((err) => {
+            res.send(err);
+        });
+};
+
+/*export const deletePlayer = (req, res) => {
+  Player.remove({ _id: req.params.PlayerId}, (err, Player) => {
+      if (err) {
+          res.send(err);
+      }
+      res.json({ message: 'Successfully deleted player'});
+  });
+};*/
+
+export const deletePlayer = async (req, res) => {
+  try {
+    const player = await Player.deleteOne({ _id: req.params.PlayerId }).exec();
+    if (player.deletedCount === 1) {
+      res.json({ message: 'Successfully deleted player' });
+    } else {
+      res.status(404).json({ message: 'Player not found' });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
 
 
 
